@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Risk Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand-container">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
+            <div class="profile-icon" id="profileIcon" style="display: none;">
+                <img src="" alt="Profile" id="profileImg" style="display: none;">
+                <span id="profileInitials"></span>
+            </div>
+        </div>
+    </nav>
+<br>
+<br>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Your Heart Health Dashboard</h1>
+            <p>Track your heart health risk predictions over time</p>
+        </div>
+
+        <div class="risk-summary">
+            <div class="risk-card highest">
+                <h3>Highest Risk</h3>
+                <p class="risk-value">{{ highest_risk }}%</p>
+                <p class="risk-date">{{ highest_risk_date }}</p>
+            </div>
+            <div class="risk-card average">
+                <h3>Average Risk</h3>
+                <p class="risk-value">{{ average_risk }}%</p>
+                <p>Based on last 5 predictions</p>
+            </div>
+            <div class="risk-card lowest">
+                <h3>Lowest Risk</h3>
+                <p class="risk-value">{{ lowest_risk }}%</p>
+                <p class="risk-date">{{ lowest_risk_date }}</p>
+            </div>
+        </div>
+
+        <div class="recent-records">
+            <h2>Recent Predictions</h2>
+            <div class="records-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Risk Level</th>
+                            <th>Key Factors</th>
+                            <th>Recommendations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_records %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td class="risk-level {{ record.risk_class }}">{{ record.risk_percentage }}%</td>
+                            <td>{{ record.key_factors }}</td>
+                            <td>{{ record.recommendations }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="trend-chart">
+            <h2>Risk Trend Over Time</h2>
+            <canvas id="riskTrendChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Chart initialization
+        const ctx = document.getElementById('riskTrendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: JSON.parse('{{ dates|tojson|safe }}'),
+                datasets: [{
+                    label: 'Heart Attack Risk %',
+                    data: JSON.parse('{{ risk_values|tojson|safe }}'),
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

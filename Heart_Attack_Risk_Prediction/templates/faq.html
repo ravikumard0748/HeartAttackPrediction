@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - CardioXpulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
+            <div class="profile-icon" id="profileIcon" style="display: none;">
+                <img src="" alt="Profile" id="profileImg" style="display: none;">
+                <span id="profileInitials"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="faq-section">
+            <h1>Frequently Asked Questions</h1>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>What is CardioXpulse?</h3>
+                    <p>CardioXpulse is an advanced heart attack risk prediction system that uses machine learning to assess your risk of experiencing a heart attack based on various health parameters.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How accurate are the predictions?</h3>
+                    <p>Our system uses a sophisticated machine learning model trained on extensive medical data. While highly accurate, the predictions should be used as a screening tool and not as a replacement for professional medical advice.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What information do I need to provide?</h3>
+                    <p>You'll need to provide basic health metrics like age, gender, heart rate, blood pressure, blood sugar levels, and specific cardiac markers (CK-MB and Troponin).</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is my data secure?</h3>
+                    <p>Yes, we take data security seriously. All your health information is encrypted and stored securely. We never share your personal data with third parties.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How often should I check my risk?</h3>
+                    <p>We recommend checking your risk whenever you get new health metrics from your doctor. Regular monitoring can help track changes in your heart health over time.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What should I do if I get a high-risk result?</h3>
+                    <p>If you receive a high-risk result, don't panic. Consult with your healthcare provider immediately and share your risk assessment results with them for proper medical evaluation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

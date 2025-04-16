@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Attack Prediction Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand-container">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <<a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
+            <div class="profile-icon" id="profileIcon" style="display: none;">
+                <img src="" alt="Profile" id="profileImg" style="display: none;">
+                <span id="profileInitials"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="prediction-form">
+            <h2>Heart Attack Risk Assessment</h2>
+            <form id="predictionForm" action="{{ url_for('result') }}" method="POST">
+                <div class="step active" data-step="1">
+                    <h3>Basic Information</h3>
+                    <div class="form-group">
+                        <label>Age:</label>
+                        <input type="number" name="Age" placeholder="Enter your age" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender:</label>
+                        <select name="Gender" required>
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="0">Female</option>
+                            <option value="1">Male</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Heart Rate:</label>
+                        <input type="text" name="Heart_Rate" placeholder="Enter heart rate" required>
+                    </div>
+                    <button type="button" class="next-btn" onclick="nextStep(1)">Next</button>
+                </div>
+
+                <div class="step" data-step="2">
+                    <h3>Medical Readings</h3>
+                    <div class="form-group">
+                        <label>Systolic Blood Pressure:</label>
+                        <input type="text" name="Systolic_blood_pressure" placeholder="Enter systolic pressure" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Diastolic Blood Pressure:</label>
+                        <input type="text" name="Diastolic_blood_pressure" placeholder="Enter diastolic pressure" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Blood Sugar:</label>
+                        <input type="text" name="Blood_sugar" placeholder="Enter blood sugar level" required>
+                    </div>
+                    <button type="button" class="prev-btn" onclick="prevStep(2)">Previous</button>
+                    <button type="button" class="next-btn" onclick="nextStep(2)">Next</button>
+                </div>
+
+                <div class="step" data-step="3">
+                    <h3>Final Details</h3>
+                    <div class="form-group">
+                        <label>CK-MB:</label>
+                        <input type="text" name="CK-MB" placeholder="Enter CK-MB level" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Troponin:</label>
+                        <input type="text" name="Troponin" placeholder="Enter Troponin level" required>
+                    </div>
+                    
+                    <button type="button" class="prev-btn" onclick="prevStep(3)">Previous</button>
+                    <button type="submit" class="submit-btn">Get Prediction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

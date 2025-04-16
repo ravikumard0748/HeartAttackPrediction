@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding-top: 50px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 80%;
+            max-width: 900px;
+            margin-top: 20px;
+            gap: 100px; /* Added gap for spacing */
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 50%;
+        }
+        .low-risk {
+            color: green;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: rgb(186, 255, 186);
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+        }
+        .chart-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .message-block {
+            flex: 1;
+            background: #fdfdfc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: left;
+            height: 400px;
+            width: 400px;
+        }
+        .message-block h3 {
+            color: #000000;
+        }
+        .warning-text {
+            color: #000000;
+            font-weight: bold;
+        }
+        .prediction-button {
+            margin-top: 40px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .prediction-button:hover {
+            background-color: #0056b3;
+        }
+        .nav-brand-container {
+            display: flex;
+            align-items: center;
+        }
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand-container">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+        </div>
+    </nav>
+    <div class="card">
+        <h2 style="color: blue; text-align: center;">Heart Attack Risk Assessment</h2>
+        {% if ress < 50 %}
+            <p class="low-risk">Low Risk of Heart Attack: {{ ress }}%</p>
+        {% else %}
+            <p style="color: red; font-size: 20px; font-weight: bold; background-color: rgb(241, 190, 190); padding: 20px; border-radius: 30px;">High Risk of Heart Attack: {{ ress}}%</p>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <!-- Risk Probability Chart -->
+        <div class="chart-container">
+            <canvas id="riskChart"></canvas>
+        </div>
+
+        <!-- Warning & Preventive Measures -->
+        <div class="message-block">
+            <h3>⚠️ Warnings & Preventive Measures</h3>
+            <p id="hr" class="warning-text"></p>
+            <p id="bp" class="warning-text"></p>
+            <p id="dbp" class="warning-text"></p>
+            <p id="bs" class="warning-text"></p>
+            <hr>
+            <h4>Recommended Actions</h4>
+            <ul>
+                <li style="color: #000000;">Maintain a balanced diet with less saturated fat.</li>
+                <li style="color: #000000;">Engage in regular physical activity.</li>
+                <li style="color: #000000;">Monitor cholesterol and blood pressure levels.</li>
+                <li style="color: #000000;">Avoid excessive alcohol and smoking.</li>
+                <li style="color: #000000;">Manage stress effectively.</li>
+                <li style="color: #000000;">Get regular medical check-ups.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Make Another Prediction Button -->
+    <button class="prediction-button"><a href="{{ url_for('predict') }}" style="text-decoration: none;">Make Another Prediction</a></button>
+
+    <script>
+        // Get the risk value and convert to number
+        const riskValue = parseFloat("{{ ress }}") ;
+        
+        // Function to update the gauge chart
+        function updateGauge() {
+            const gauge = document.getElementById('gauge');
+            const pointer = document.getElementById('pointer');
+            const riskText = document.getElementById('risk-text');
+            
+            // Calculate rotation based on risk value (0-100)
+            const rotation = (riskValue * 1.8) - 90; // Convert to degrees (-90 to 90)
+            pointer.style.transform = `rotate(${rotation}deg)`;
+            
+            // Update risk text and color
+            riskText.textContent = `${riskValue.toFixed(1)}%`;
+            
+            // Set color based on risk level
+            let color;
+            if (riskValue < 30) {
+                color = '#28a745';  // Green for low risk
+            } else if (riskValue < 70) {
+                color = '#fd7e14';  // Orange for medium risk
+            } else {
+                color = '#dc3545';  // Red for high risk
+            }
+            pointer.style.backgroundColor = color;
+            riskText.style.color = color;
+        }
+        
+        // Call update function when page loads
+        window.onload = updateGauge;
+        
+        // Initialize risk chart
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [riskValue, 100 - riskValue],
+                        backgroundColor: [
+                            riskValue > 70 ? '#dc3545' : riskValue > 30 ? '#fd7e14' : '#28a745',
+                            '#eee'
+                        ]
+                    }],
+                    labels: ['Risk', 'Safe']
+                },
+                options: {
+                    cutout: '70%',
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+
+        function checkWarnings() {
+            var heartRate = Number("{{ heart_rate }}");
+            var systolicBP = Number("{{ systolic_bp }}");
+            var diastolicBP = Number("{{ diastolic_bp }}");
+            var bloodSugar = Number("{{ blood_sugar }}");
+
+            if (heartRate > 90) {
+                document.getElementById("hr").innerHTML = "⚠️ Heart Rate: " + heartRate + " bpm is high. Consider lifestyle changes.";
+            }
+            if (systolicBP > 100) {
+                document.getElementById("bp").innerHTML = "⚠️ Systolic Blood Pressure: " + systolicBP + " mmHg is high. Please monitor it.";
+            }
+            if (diastolicBP > 90) {
+                document.getElementById("dbp").innerHTML = "⚠️ Diastolic Blood Pressure: " + diastolicBP + " mmHg is high. Consult your doctor.";
+            }
+            if (bloodSugar > 90) {
+                document.getElementById("bs").innerHTML = "⚠️ Blood Sugar: " + bloodSugar + " mg/dL is high. Keep track of your diet.";
+            }
+        }
+        
+        {% if ress < 0.5 %}
+            window.onload = checkWarnings;
+        {% endif %}
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Attack Prediction System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand-container">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            </a>
+            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
+            <div class="profile-icon" id="profileIcon" style="display: none;">
+                <img src="" alt="Profile" id="profileImg" style="display: none;">
+                <span id="profileInitials"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Heart Attack Risk Prediction</h1>
+            <p>Early detection can save lives. Use our advanced AI system to assess your heart health.</p>
+        </div>
+
+        <div class="precautions-float">
+            <h2 class="precaution-title">Essential Heart Health Precautions</h2>
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <div class="precaution-card">
+                        <span class="icon">🏃</span>
+                        <h3>Regular Exercise</h3>
+                        <p>30 minutes of daily exercise can reduce heart attack risk by 50%. Include both cardio and strength training in your routine.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🥗</span>
+                        <h3>Heart-Healthy Diet</h3>
+                        <p>Focus on fruits, vegetables, whole grains, and lean proteins. Limit saturated fats and avoid trans fats completely.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🚭</span>
+                        <h3>Quit Smoking</h3>
+                        <p>Smoking increases heart attack risk by 200%. Quitting can reduce your risk to near non-smoker levels within 5 years.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">😴</span>
+                        <h3>Quality Sleep</h3>
+                        <p>7-9 hours of quality sleep helps maintain heart health. Poor sleep is linked to increased heart disease risk.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🧘‍♂️</span>
+                        <h3>Stress Management</h3>
+                        <p>Practice meditation, yoga, or deep breathing exercises. Chronic stress can increase heart attack risk significantly.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🩺</span>
+                        <h3>Regular Check-ups</h3>
+                        <p>Schedule regular blood pressure, cholesterol, and diabetes screenings. Early detection is key to prevention.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🚰</span>
+                        <h3>Stay Hydrated</h3>
+                        <p>Drink 8-10 glasses of water daily. Proper hydration helps maintain healthy blood circulation and heart function.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🥑</span>
+                        <h3>Heart-Healthy Fats</h3>
+                        <p>Include omega-3 rich foods like fish, nuts, and avocados. These fats help reduce inflammation and support heart health.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">🧂</span>
+                        <h3>Limit Sodium</h3>
+                        <p>Keep sodium intake under 2,300mg daily. Excess salt can lead to high blood pressure and increased heart strain.</p>
+                    </div>
+                    <div class="precaution-card">
+                        <span class="icon">❤️</span>
+                        <h3>Know Your Numbers</h3>
+                        <p>Monitor your blood pressure, cholesterol, BMI, and blood sugar regularly. Knowledge is the first step to prevention.</p>
+                    </div>
+                </div>
+                <div class="carousel-dots"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('predict') }}" class="predict-btn">Check Your Risk</a>
+        </div>
+
+        <div class="awareness-section">
+            <h2>Understanding Heart Health</h2>
+            <div class="info-cards">
+                <div class="info-card">
+                    <img src="https://img.icons8.com/color/96/000000/heart-health.png" alt="Heart Health">
+                    <h3>Early Detection Saves Lives</h3>
+                    <p>Recognizing early warning signs can reduce heart attack risk by up to 80%.</p>
+                </div>
+                
+                <div class="info-card">
+                    <img src="https://img.icons8.com/color/96/000000/medical-doctor.png" alt="Medical Check">
+                    <h3>Regular Check-ups</h3>
+                    <p>Regular monitoring of heart health indicators is crucial for prevention.</p>
+                </div>
+
+                <div class="info-card">
+                    <img src="{{ url_for('static', filename='healthylife.png') }}" alt="Healthy Lifestyle" style="width: 96px; height: 96px; border-radius: 8px;">
+                    <h3>Healthy Lifestyle</h3>
+                    <p>Exercise, balanced diet, and stress management reduce heart attack risks.</p>
+                </div>
+            </div>
+
+            <div class="quote-section">
+                <blockquote>
+                    "Prevention is better than cure. Take control of your heart health today."
+                </blockquote>
+            </div>
+            <div class="benefits">
+                <h2>Benefits of Early Prediction</h2>
+                <ul>
+                    <li>✓ Identify risk factors before they become serious</li>
+                    <li>✓ Personalized health recommendations</li>
+                    <li>✓ Track your heart health progress over time</li>
+                    <li>✓ Make informed lifestyle changes</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
