@@ -12,10 +12,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Twilio API credentials from environment variables
-SID = os.getenv('TWILIO_SID', '')
-token = os.getenv('TWILIO_TOKEN', '')
-twilio_from = os.getenv('TWILIO_FROM_NUMBER', '+19898122470')
-twilio_to = os.getenv('TWILIO_TO_NUMBER', '+918668129523')
+SID = os.getenv('TWILIO_SID')
+token = os.getenv('TWILIO_TOKEN')
+twilio_from = os.getenv('TWILIO_FROM_NUMBER')
+twilio_to = os.getenv('TWILIO_TO_NUMBER')
 
 # Initialize Twilio client only if credentials are provided
 ct = None
