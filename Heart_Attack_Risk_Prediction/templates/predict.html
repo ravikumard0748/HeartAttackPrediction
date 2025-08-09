@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heart Attack Prediction Form</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <nav>
         <div class="nav-brand-container">
-            <a href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            <a href="index.html">
+                <img src="static/logo.jpg" alt="CardioXpulse Logo" class="nav-logo">
             </a>
-            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+            <a href="index.html" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
         </div>
         <div class="nav-links">
-            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
-            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
-            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
-            <<a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
-            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="predict.html" class="nav-link">Prediction</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="faq.html" class="nav-link">FAQ</a>
+            <a href="contact.html" class="nav-link">Contact</a>
             <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
             <div class="profile-icon" id="profileIcon" style="display: none;">
                 <img src="" alt="Profile" id="profileImg" style="display: none;">
@@ -32,7 +32,7 @@
     <div class="container">
         <div class="prediction-form">
             <h2>Heart Attack Risk Assessment</h2>
-            <form id="predictionForm" action="{{ url_for('result') }}" method="POST">
+            <form id="predictionForm" onsubmit="submitPrediction(event)"">
                 <div class="step active" data-step="1">
                     <h3>Basic Information</h3>
                     <div class="form-group">
@@ -90,6 +90,36 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="static/script.js"></script>
+    <script>
+        async function submitPrediction(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/.netlify/functions/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Store result in localStorage and redirect to result page
+                    localStorage.setItem('predictionResult', JSON.stringify(result));
+                    window.location.href = 'result.html';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>

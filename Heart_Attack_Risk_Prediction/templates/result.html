@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
     
     <title>Prediction Result</title>
     <style>
@@ -106,19 +106,17 @@
 <body>
     <nav>
         <div class="nav-brand-container">
-            <a href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            <a href="index.html">
+                <img src="static/logo.jpg" alt="CardioXpulse Logo" class="nav-logo">
             </a>
-            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+            <a href="index.html" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
         </div>
     </nav>
     <div class="card">
         <h2 style="color: blue; text-align: center;">Heart Attack Risk Assessment</h2>
-        {% if ress < 50 %}
-            <p class="low-risk">Low Risk of Heart Attack: {{ ress }}%</p>
-        {% else %}
-            <p style="color: red; font-size: 20px; font-weight: bold; background-color: rgb(241, 190, 190); padding: 20px; border-radius: 30px;">High Risk of Heart Attack: {{ ress}}%</p>
-        {% endif %}
+        <div id="riskDisplay">
+            <!-- Risk percentage will be displayed here -->
+        </div>
     </div>
 
     <div class="container">
@@ -148,25 +146,37 @@
     </div>
 
     <!-- Make Another Prediction Button -->
-    <button class="prediction-button"><a href="{{ url_for('predict') }}" style="text-decoration: none;">Make Another Prediction</a></button>
+    <button class="prediction-button"><a href="predict.html" style="text-decoration: none;">Make Another Prediction</a></button>
 
     <script>
-        // Get the risk value and convert to number
-        const riskValue = parseFloat("{{ ress }}") ;
-        
+        // Get prediction result from localStorage
+        const predictionResult = JSON.parse(localStorage.getItem('predictionResult') || '{}');
+        const riskValue = predictionResult.risk_percentage || 0;
+        const inputData = predictionResult.input_data || {};
+
+        // Display risk result
+        function displayRiskResult() {
+            const riskDisplay = document.getElementById('riskDisplay');
+            if (riskValue < 50) {
+                riskDisplay.innerHTML = `<p class="low-risk">Low Risk of Heart Attack: ${riskValue}%</p>`;
+            } else {
+                riskDisplay.innerHTML = `<p style="color: red; font-size: 20px; font-weight: bold; background-color: rgb(241, 190, 190); padding: 20px; border-radius: 30px;">High Risk of Heart Attack: ${riskValue}%</p>`;
+            }
+        }
+
         // Function to update the gauge chart
         function updateGauge() {
             const gauge = document.getElementById('gauge');
             const pointer = document.getElementById('pointer');
             const riskText = document.getElementById('risk-text');
-            
+
             // Calculate rotation based on risk value (0-100)
             const rotation = (riskValue * 1.8) - 90; // Convert to degrees (-90 to 90)
-            pointer.style.transform = `rotate(${rotation}deg)`;
-            
+            if (pointer) pointer.style.transform = `rotate(${rotation}deg)`;
+
             // Update risk text and color
-            riskText.textContent = `${riskValue.toFixed(1)}%`;
-            
+            if (riskText) riskText.textContent = `${riskValue.toFixed(1)}%`;
+
             // Set color based on risk level
             let color;
             if (riskValue < 30) {
@@ -176,12 +186,16 @@
             } else {
                 color = '#dc3545';  // Red for high risk
             }
-            pointer.style.backgroundColor = color;
-            riskText.style.color = color;
+            if (pointer) pointer.style.backgroundColor = color;
+            if (riskText) riskText.style.color = color;
         }
-        
-        // Call update function when page loads
-        window.onload = updateGauge;
+
+        // Call update functions when page loads
+        window.onload = function() {
+            displayRiskResult();
+            updateGauge();
+            checkWarnings();
+        };
         
         // Initialize risk chart
         document.addEventListener("DOMContentLoaded", function() {
@@ -211,10 +225,10 @@
         });
 
         function checkWarnings() {
-            var heartRate = Number("{{ heart_rate }}");
-            var systolicBP = Number("{{ systolic_bp }}");
-            var diastolicBP = Number("{{ diastolic_bp }}");
-            var bloodSugar = Number("{{ blood_sugar }}");
+            var heartRate = Number(inputData.heart_rate || 0);
+            var systolicBP = Number(inputData.systolic || 0);
+            var diastolicBP = Number(inputData.diastolic || 0);
+            var bloodSugar = Number(inputData.blood_sugar || 0);
 
             if (heartRate > 90) {
                 document.getElementById("hr").innerHTML = "⚠️ Heart Rate: " + heartRate + " bpm is high. Consider lifestyle changes.";
@@ -229,10 +243,6 @@
                 document.getElementById("bs").innerHTML = "⚠️ Blood Sugar: " + bloodSugar + " mg/dL is high. Keep track of your diet.";
             }
         }
-        
-        {% if ress < 0.5 %}
-            window.onload = checkWarnings;
-        {% endif %}
     </script>
 </body>
 </html>

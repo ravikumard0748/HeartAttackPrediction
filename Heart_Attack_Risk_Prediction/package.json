@@ -1,0 +1,22 @@
+{
+  "name": "heart-attack-prediction",
+  "version": "1.0.0",
+  "description": "Heart Attack Risk Prediction System",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p dist && cp templates/*.html dist/ && cp -r static dist/ && cp finalfinalmodel.joblib dist/ && mkdir -p dist/.netlify && cp -r netlify dist/.netlify/",
+    "dev": "python app.py",
+    "start": "python app.py",
+    "deploy": "npm run build && netlify deploy --prod --dir=dist"
+  },
+  "keywords": [
+    "heart-attack",
+    "prediction",
+    "machine-learning",
+    "healthcare"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, jsonify
 import joblib
 import numpy as np
 import pandas as pd
@@ -6,14 +6,30 @@ from twilio.rest import Client
 from datetime import datetime
 import json
 import os
+from dotenv import load_dotenv
 
-# Twilio API credentials
-SID = ''
-token = ''
-ct = Client(SID, token)
+# Load environment variables
+load_dotenv()
+
+# Twilio API credentials from environment variables
+SID = os.getenv('TWILIO_SID', '')
+token = os.getenv('TWILIO_TOKEN', '')
+twilio_from = os.getenv('TWILIO_FROM_NUMBER', '+19898122470')
+twilio_to = os.getenv('TWILIO_TO_NUMBER', '+918668129523')
+
+# Initialize Twilio client only if credentials are provided
+ct = None
+if SID and token:
+    ct = Client(SID, token)
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # Required for session management
+app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-this-in-production')
+
+# Configure for production
+if os.getenv('FLASK_ENV') == 'production':
+    app.config['DEBUG'] = False
+else:
+    app.config['DEBUG'] = True
 
 # Load ML Model
 model = joblib.load("finalfinalmodel.joblib")
@@ -162,12 +178,15 @@ def result():
             save_record(record)
 
             # Check if high risk for SMS alert
-            if result[0] == 1:
-                ct.messages.create(
-                    body="Your friend / Relative have High risk of being Attack by the Heart Attack Please contact Him",
-                    from_='+19898122470',
-                    to='+918668129523'
-                )
+            if result[0] == 1 and ct:
+                try:
+                    ct.messages.create(
+                        body="Your friend / Relative have High risk of being Attack by the Heart Attack Please contact Him",
+                        from_=twilio_from,
+                        to=twilio_to
+                    )
+                except Exception as e:
+                    print(f"Failed to send SMS: {str(e)}")
 
         except Exception as e:
             return render_template("result.html", res=f"Error: {str(e)}")
@@ -191,5 +210,20 @@ def faq():
 def contact():
     return render_template("contact.html")
 
+@app.route("/health")
+def health_check():
+    """Health check endpoint for monitoring"""
+    try:
+        # Check if model can be loaded
+        model_path = "finalfinalmodel.joblib"
+        if os.path.exists(model_path):
+            return {"status": "healthy", "model": "loaded"}, 200
+        else:
+            return {"status": "unhealthy", "error": "model not found"}, 500
+    except Exception as e:
+        return {"status": "unhealthy", "error": str(e)}, 500
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('DEBUG', 'False').lower() == 'true'
+    app.run(host='0.0.0.0', port=port, debug=debug)

@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heart Attack Prediction System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <nav>
         <div class="nav-brand-container">
-            <a href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CardioXpulse Logo" class="nav-logo">
+            <a href="index.html">
+                <img src="static/logo.jpg" alt="CardioXpulse Logo" class="nav-logo">
             </a>
-            <a href="{{ url_for('home') }}" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
+            <a href="index.html" class="nav-brand">Cardio<span style="color: red;">Xpulse</span></a>
         </div>
         <div class="nav-links">
-            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
-            <a href="{{ url_for('predict') }}" class="nav-link">Prediction</a>
-            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
-            <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
-            <a href="{{ url_for('contact') }}" class="nav-link">Contact</a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="predict.html" class="nav-link">Prediction</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="faq.html" class="nav-link">FAQ</a>
+            <a href="contact.html" class="nav-link">Contact</a>
             <a href="login.html" class="nav-link login-btn" id="loginBtn">Login</a>
             <div class="profile-icon" id="profileIcon" style="display: none;">
                 <img src="" alt="Profile" id="profileImg" style="display: none;">
